@@ -2,17 +2,22 @@
 #-*- coding: utf-8 -*-
 __author__ = 'Michael Shen'
 
-
+#pip install python-docx
+# pip install pynput
+# pip install PyAutoGUI
+#pip install python-docx
 # pip install keyboard
+# pip install pillow
+# pip install baidu-aip
 
 import keyboard,time,pynput
 from PIL import ImageGrab
-from PIL import Image
+# from PIL import Image
 
 # BytesIO是操作二进制数据的模块
 from io import BytesIO
 
-# pip install pywin32, win32clipboard是操作剪贴板的模块
+# pip install pywin32 # win32clipboard是操作剪贴板的模块
 import win32clipboard
 import math
 import pyautogui as pag
@@ -21,7 +26,7 @@ import pyautogui as pag
 F1 截图--》复制--》保存
 '''
 
-def move_and_past(hotkeycode):
+def move_and_past(hotkeycode,pos_detal=70):
     keyboard.wait(hotkey=hotkeycode)
 
     time.sleep(0.5)
@@ -29,7 +34,7 @@ def move_and_past(hotkeycode):
     #控制鼠标
     ctr = pynput.mouse.Controller()
     #
-    ctr.move(0, pos_detal)
+    ctr.move(0, int(pos_detal))
 
     time.sleep(0.3)
     #左键单击。
@@ -60,7 +65,7 @@ def Past_content():
     ctr.press(pynput.keyboard.Key.esc)
     ctr.release(pynput.keyboard.Key.esc)
 
-def clik_mouse_left(cent_pos):
+def clik_mouse_left(cent_pos,pos_detal):
     '''
     控制鼠标处理F2，并移动光标，以及移回到原来位置
     :return:
@@ -88,11 +93,11 @@ def clik_mouse_left(cent_pos):
     ctr1.release(pynput.keyboard.KeyCode.from_vk(0x23))
 
     #向上移动回原来位置
-    ctr.move(0, (0-pos_detal))
+    ctr.move(0, (0-int(pos_detal)))
 
 def image_resize(picture_width):
 
-    image = Image.open('haha.jpg')
+    # image = Image.open('haha.jpg')
     (x,y) = image.size
     # print((x,y))
     x_s = int(picture_width)  # define standard width
@@ -153,27 +158,40 @@ def paste_img(file_img):
     send_msg_to_clip(win32clipboard.CF_DIB, data)
     pass
 
-# picture_width = input('please input the picture width, word is 200 \n')
-picture_width =500
-pos_detal = 70
-cent_pos = 500
-while True:
-    #Greenshot get pic in clipboard
-    #等待F1 按下
-    move_and_past('F1')
-    time.sleep(0.5)
-    image= ImageGrab.grabclipboard()
+def main():
+    # picture_width = input('please input the picture width, word is 200 \n')
+    picture_width =500
+    pos_detal = 70
+    cent_pos = 500
+    while True:
+        #Greenshot get pic in clipboard
+        #等待F1 按下
+        try:
+            move_and_past('F1',pos_detal)
+            time.sleep(0.5)
+            image= ImageGrab.grabclipboard()
+        except IOError:
+            print ('Error: F1 出错')
+        #如果需要改变图片大小，但是太糊了，还是用word 的宏处理更好
+        # image.save('haha.jpg')
+        # image_resize(picture_width)
 
-    #如果需要改变图片大小，但是太糊了，还是用word 的宏处理更好
-    # image.save('haha.jpg')
-    # image_resize(picture_width)
+        #保存图片
+        try:
+            time.sleep(0.5)
+            Past_content()
+            time.sleep(0.5)
+        except IOError1:
+            print('Error: 粘贴 出错')
 
-    #保存图片
-    time.sleep(0.5)
-    Past_content()
-    time.sleep(0.5)
+        #移动到原来位置
+        try:
+            clik_mouse_left(cent_pos,pos_detal)
+        except IOError2:
+            print('Error: 鼠标移回 出错')
+        # print(image)
 
-    #移动到原来位置
-    clik_mouse_left(cent_pos)
 
-    # print(image)
+
+if __name__ == '__main__':
+    main()
