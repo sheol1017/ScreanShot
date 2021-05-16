@@ -21,6 +21,7 @@ from io import BytesIO
 import win32clipboard
 import math
 import pyautogui as pag
+import aip_text_recognition
 '''
 结合greenshot来实时截图
 F1 截图--》复制--》保存
@@ -173,9 +174,9 @@ def main():
         except IOError:
             print ('Error: F1 出错')
         #如果需要改变图片大小，但是太糊了，还是用word 的宏处理更好
-        # image.save('haha.jpg')
+        image.save('haha.jpg')
         # image_resize(picture_width)
-
+        '''
         #保存图片
         try:
             time.sleep(0.5)
@@ -190,8 +191,9 @@ def main():
         except IOError2:
             print('Error: 鼠标移回 出错')
         # print(image)
-
-
+        '''
+        Text = aip_text_recognition.get_text_from_image('haha.jpg')
+        print(Text)
 
 if __name__ == '__main__':
     main()
