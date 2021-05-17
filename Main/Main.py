@@ -22,10 +22,18 @@ import win32clipboard
 import math
 import pyautogui as pag
 import aip_text_recognition
+import os
+import  io
+import Text_into_word
 '''
 结合greenshot来实时截图
 F1 截图--》复制--》保存
 '''
+
+import time
+today1 = time.strftime("%Y-%m-%d",time.localtime())
+today2 = time.strftime("%Y/%m/%d",time.localtime())
+today = time.strftime("%Y{y}%m{m}%d{d}",time.localtime()).format(y='年',m='月',d='日')
 
 def move_and_past(hotkeycode,pos_detal=70):
     keyboard.wait(hotkey=hotkeycode)
@@ -66,7 +74,7 @@ def Past_content():
     ctr.press(pynput.keyboard.Key.esc)
     ctr.release(pynput.keyboard.Key.esc)
 
-def clik_mouse_left(cent_pos,pos_detal):
+def clik_mouse_left(cent_pos,pos_detal,scroll_pos):
     '''
     控制鼠标处理F2，并移动光标，以及移回到原来位置
     :return:
@@ -95,6 +103,8 @@ def clik_mouse_left(cent_pos,pos_detal):
 
     #向上移动回原来位置
     ctr.move(0, (0-int(pos_detal)))
+    #并且向上滚轮
+    ctr.scroll(0, -int(scroll_pos))
 
 def image_resize(picture_width):
 
@@ -164,6 +174,10 @@ def main():
     picture_width =500
     pos_detal = 70
     cent_pos = 500
+    scroll_pos = 50
+
+    Text_into_word.Text_word_init('./result/test.doc')
+
     while True:
         #Greenshot get pic in clipboard
         #等待F1 按下
@@ -174,9 +188,9 @@ def main():
         except IOError:
             print ('Error: F1 出错')
         #如果需要改变图片大小，但是太糊了，还是用word 的宏处理更好
-        image.save('haha.jpg')
+        image.save('./result/haha.jpg')
         # image_resize(picture_width)
-        '''
+
         #保存图片
         try:
             time.sleep(0.5)
@@ -187,13 +201,19 @@ def main():
 
         #移动到原来位置
         try:
-            clik_mouse_left(cent_pos,pos_detal)
+            clik_mouse_left(cent_pos,pos_detal,scroll_pos)
         except IOError2:
             print('Error: 鼠标移回 出错')
         # print(image)
-        '''
-        Text = aip_text_recognition.get_text_from_image('haha.jpg')
+
+        Text = aip_text_recognition.get_text_from_image('./result/haha.jpg')
         print(Text)
+
+
+
+
+        Text_into_word.Text_add_word(Text,'./result/test.doc')
+
 
 if __name__ == '__main__':
     main()
