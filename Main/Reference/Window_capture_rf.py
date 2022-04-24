@@ -29,7 +29,7 @@ def window_capture(filename):
   saveBitMap.SaveBitmapFile(saveDC, filename)
 
 beg = time.time()
-for i in range(10):
+for _ in range(10):
   window_capture("../haha.jpg")
 end = time.time()
 print(end - beg)

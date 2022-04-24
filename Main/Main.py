@@ -156,7 +156,6 @@ def paste_img(file_img):
     # BMP的图片有时也会以.DIB和.RLE作扩展名
     # 设置好剪贴板的数据格式，再传入对应格式的数据，才能正确向剪贴板写入数据
     send_msg_to_clip(win32clipboard.CF_DIB, data)
-    pass
 
 def main():
     # picture_width = input('please input the picture width, word is 200 \n')
